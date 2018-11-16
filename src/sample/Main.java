@@ -36,7 +36,7 @@ public class Main extends Application {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("../gui/gui.fxml"));
             stage.setTitle("Music World | "+username);
-            stage.setScene(new Scene(root,650,800));
+            stage.setScene(new Scene(root,800,800));
         }catch (Exception e){
 
             e.printStackTrace();
