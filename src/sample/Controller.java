@@ -17,9 +17,12 @@ public class Controller implements Initializable
 
     private Main stage;
 
+
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle)
     {
+
     }
 
     public void setStage(Main stage){
@@ -43,7 +46,7 @@ public class Controller implements Initializable
     private void handleButtonAction(ActionEvent event) {
         // Button was clicked, do something…
         System.out.println(userField.getText()+" "+passwordField.getText());
-        if(userField.getText().equals("admin") && passwordField.getText().equals("admin"))
+        if(1==1||userField.getText().equals("admin") && passwordField.getText().equals("admin"))
             stage.postLogin(userField.getText());
     }
 

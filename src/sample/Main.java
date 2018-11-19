@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
+import java.awt.*;
 import java.net.URL;
 
 public class Main extends Application {
@@ -36,7 +37,12 @@ public class Main extends Application {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("../gui/gui.fxml"));
             stage.setTitle("Music World | "+username);
-            stage.setScene(new Scene(root,800,800));
+            stage.setScene(new Scene(root,1200,800));
+            Toolkit toolkit = Toolkit.getDefaultToolkit();
+            int width = toolkit.getScreenSize().width;
+            int height = toolkit.getScreenSize().height;
+            stage.setX((width-1200)/2);
+            stage.setY((height-800)/2);
         }catch (Exception e){
 
             e.printStackTrace();
