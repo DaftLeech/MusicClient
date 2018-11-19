@@ -28,6 +28,7 @@ public class GuiController implements Initializable{
         System.out.println("INIT");
         ObservableList<String> sTypeNames = FXCollections.observableArrayList(searchTypes.INTERPRETER.name(),searchTypes.ALBUM.name());
         searchCombo.setItems(sTypeNames);
+        searchCombo.getSelectionModel().select(0);
 
         Interpreter i = new Interpreter("Inter");
         Song s = new Song("Song",100);
