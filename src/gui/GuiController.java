@@ -32,7 +32,8 @@ public class GuiController implements Initializable{
         Interpreter i = new Interpreter("Inter");
         Song s = new Song("Song",100);
         ArrayList<Song> aS = new ArrayList<>();
-        aS.add(s);
+        for(int ix = 0; ix < 100; ix++)
+            aS.add(s);
         Album a = new Album("Album",i,aS);
 
         ObservableList<Album> items = FXCollections.observableArrayList(a);

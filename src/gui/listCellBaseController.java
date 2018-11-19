@@ -55,7 +55,14 @@ public class listCellBaseController extends ListCell<Album> {
             }
             ObservableList<Label> items = FXCollections.observableArrayList(labels);
 
+            System.out.println(items.size()*detailsList.getFixedCellSize());
+            detailsList.setFixedCellSize(35);
             detailsList.setItems(items);
+            double lastHeight = detailsList.getPrefHeight();
+            detailsList.setPrefHeight((detailsList.getItems().size())*detailsList.getFixedCellSize()+detailsList.getFixedCellSize()/10);
+            double newHeight = detailsList.getPrefHeight();
+
+            pane.setPrefHeight(pane.getPrefHeight()-(lastHeight-newHeight));
 
             setText(null);
             setGraphic(pane);
