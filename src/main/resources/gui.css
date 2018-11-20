@@ -1,0 +1,72 @@
+.combo-box .cell {
+     -fx-text-fill: white;
+     -fx-background-color: #212121;
+}
+.list-view .cell {
+     -fx-text-fill: white;
+     -fx-prompt-text-fill: white;
+     -fx-text-inner-color: white;
+     -fx-background-color: #212121;
+     -fx-border-color: #535353;
+}
+
+.list-view {
+    -fx-background-color: #212121;
+}
+
+.list-view .list-cell:hover {
+    -fx-background-color: #212121;
+}
+
+.list-view .list-cell:selected {
+    -fx-background-color: #212121;
+}
+
+.list-view .list-cell {
+    -fx-background-color: #212121;
+    -fx-text-fill: white;
+}
+
+.list-view .label {
+    -fx-text-fill: white;
+}
+
+
+
+
+.list-view .scroll-bar:horizontal ,
+.list-view  .scroll-bar:vertical{
+    -fx-background-color:transparent;
+
+}
+
+.list-view .scroll-bar:horizontal:hover .track ,
+.list-view .scroll-bar:horizontal .track ,
+.list-view .scroll-bar:horizontal:pressed .track ,
+.list-view .scroll-bar:vertical:hover .track,
+.list-view .scroll-bar:vertical .track,
+.list-view .scroll-bar:vertical:pressed .track{
+     -fx-background-color: derive(#434343,20%);
+	 -fx-opacity: 0.2;
+	 -fx-background-radius: 0em;
+
+}
+
+.list-view .corner {
+    -fx-background-color: transparent;
+}
+
+/* The main scrollbar **thumb** CSS class on event of "hover" and "pressed" */
+.list-view .scroll-bar .thumb:hover,
+.list-view .scroll-bar .thumb,
+.list-view .scroll-bar .thumb:pressed{
+    -fx-background-color: derive(black,50%);
+}
+
+.list-view .increment-button:hover ,
+.list-view .increment-button: ,
+.list-view .decrement-button:pressed {
+    -fx-background-color:derive(gray,100%);
+	-fx-border-color:derive(gray,80%);
+	-fx-padding:10px;
+}
