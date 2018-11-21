@@ -1,5 +1,6 @@
 package login;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
@@ -7,6 +8,7 @@ import general.Main;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import model.User;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -55,23 +57,25 @@ public class LoginController implements Initializable
         System.out.println(userField.getText()+" "+passwordField.getText());
 
         try {
-            URL url = new URL("http://g.php"); // URL to your application
-            Map<String, Object> params = new LinkedHashMap<>();
-            params.put("value", 5); // All parameters, also easy
-            params.put("id", 17);
+            URL url = new URL("http://localhost:18183/User/login"); // URL to your application
+            Map<String, String> params = new LinkedHashMap<>();
+            params.put("userName", userField.getText()); // All parameters, also easy
+            params.put("password", passwordField.getText());
 
             StringBuilder postData = new StringBuilder();
             // POST as urlencoded is basically key-value pairs, as with GET
             // This creates key=value&key=value&... pairs
-            for (Map.Entry<String, Object> param : params.entrySet()) {
+            for (Map.Entry<String, String> param : params.entrySet()) {
                 if (postData.length() != 0) postData.append('&');
                 postData.append(URLEncoder.encode(param.getKey(), "UTF-8"));
                 postData.append('=');
-                postData.append(URLEncoder.encode(String.valueOf(param.getValue()), "UTF-8"));
+                postData.append(URLEncoder.encode(param.getValue(), "UTF-8"));
             }
 
             // Convert string to byte array, as it should be sent
             byte[] postDataBytes = postData.toString().getBytes("UTF-8");
+            System.out.println(url);
+            System.out.println("Connecting...");
 
             // Connect, easy
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -82,17 +86,25 @@ public class LoginController implements Initializable
             conn.setDoOutput(true);
             conn.getOutputStream().write(postDataBytes);
 
-            // This gets the output from your server
-            Reader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+            System.out.println("Connected.");
 
-            for (int c; (c = in.read()) >= 0; )
-                System.out.print((char) c);
+            // This gets the output from your server
+            ObjectMapper mapper = new ObjectMapper();
+            User user = mapper.readValue(new InputStreamReader(conn.getInputStream(), "UTF-8"),  User.class);
+
+            System.out.print("UserID:");
+            System.out.println(user.getUserID());
+            System.out.print("SessionID:");
+            System.out.println(user.getSessionID());
+
+            if(user!=null)//||userField.getText().equals("admin") && passwordField.getText().equals("admin"))
+                stage.postLogin(userField.getText());
         }catch (Exception e){
             e.printStackTrace();
         }
 
-        if(1==1||userField.getText().equals("admin") && passwordField.getText().equals("admin"))
-            stage.postLogin(userField.getText());
+
+
     }
 
 

@@ -19,16 +19,18 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
 
-public class GuiController implements Initializable{
+public class GuiController implements Initializable {
 
     private Main stage;
-    private enum searchTypes {INTERPRETER , ALBUM};
+
+    private enum searchTypes {INTERPRETER, ALBUM}
+
+    ;
 
     @Override
-    public void initialize(URL url, ResourceBundle resourceBundle)
-    {
+    public void initialize(URL url, ResourceBundle resourceBundle) {
         System.out.println("INIT");
-        ObservableList<String> sTypeNames = FXCollections.observableArrayList(searchTypes.INTERPRETER.name(),searchTypes.ALBUM.name());
+        ObservableList<String> sTypeNames = FXCollections.observableArrayList(searchTypes.INTERPRETER.name(), searchTypes.ALBUM.name());
         searchCombo.setItems(sTypeNames);
         searchCombo.getSelectionModel().select(0);
 
@@ -48,7 +50,7 @@ public class GuiController implements Initializable{
 
     }
 
-    public void addItemToResultList(ObservableList<Album> items){
+    public void addItemToResultList(ObservableList<Album> items) {
 
         ObservableList<Album> currentList = resultList.getItems();
         currentList.addAll(items);
@@ -56,11 +58,12 @@ public class GuiController implements Initializable{
 
 
     }
-    public void clearResultList(){
+
+    public void clearResultList() {
         resultList.setItems(FXCollections.observableArrayList());
     }
 
-    public void setStage(Main stage){
+    public void setStage(Main stage) {
         this.stage = stage;
     }
 
@@ -76,7 +79,7 @@ public class GuiController implements Initializable{
     @FXML
     private JFXButton searchButton;
 
-    public GuiController(){
+    public GuiController() {
 
 
     }
@@ -90,66 +93,86 @@ public class GuiController implements Initializable{
             boolean searchByInter = searchCombo.getSelectionModel().getSelectedItem().equals(searchTypes.INTERPRETER.name());
             String path = searchByInter ? "Interpreter/byText" : "Album/byText";
             String query = searchByInter ? "interName" : "albumName";
-            HttpURLConnection connection = getConnection(path,query,searchText.getText());
+            HttpURLConnection connection = getConnection(path, query, searchText.getText());
 
             ObservableList<Album> items = FXCollections.observableArrayList();
+            ObjectMapper mapper = new ObjectMapper();
+            List<Interpreter> interpreters = new LinkedList();
+            InputStream json = null;
 
-            if(searchByInter){
-                System.out.println("Mapping...");
-                InputStream json = connection.getInputStream();
-                ObjectMapper mapper = new ObjectMapper();
-                List<Interpreter> interpreters = mapper.readValue(json,  mapper.getTypeFactory().constructCollectionType(List.class, Interpreter.class));
 
-                for(Interpreter interpreter : interpreters){
-                    path = "Album/byInterID";
-                    query = "interID";
+            System.out.println("Mapping...");
+            if (searchByInter) {
+                //get Interpreters
+                json = connection.getInputStream();
+                mapper = new ObjectMapper();
+                interpreters = mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, Interpreter.class));
+            } else {
+                //get Albums
+                json = connection.getInputStream();
+                mapper = new ObjectMapper();
+                List<Album> albums = mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, Album.class));
 
-                    connection = getConnection(path,query,String.valueOf(interpreter.getInterID()));
+                //get Interpreters
+                for (Album album : albums) {
+                    path = "Interpreter/byAlbumID";
+                    query = "albumID";
+                    connection = getConnection(path, query, String.valueOf(album.getAlbumID()));
                     json = connection.getInputStream();
                     mapper = new ObjectMapper();
-                    List<Album> albums= mapper.readValue(json,  mapper.getTypeFactory().constructCollectionType(List.class, Album.class));
+                    interpreters = mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, Interpreter.class));
+                }
+            }
+            for (Interpreter interpreter : interpreters) {
+                path = "Album/byInterID";
+                query = "interID";
 
-                    for(Album album : albums){
+                connection = getConnection(path, query, String.valueOf(interpreter.getInterID()));
+                json = connection.getInputStream();
+                mapper = new ObjectMapper();
+                List<Album> albums = mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, Album.class));
 
-                        path= "Song/byAlbumID";
-                        query="albumID";
-                        connection = getConnection(path,query,String.valueOf(album.getAlbumID()));
-                        json = connection.getInputStream();
-                        mapper = new ObjectMapper();
-                        List<Song> songs= mapper.readValue(json,  mapper.getTypeFactory().constructCollectionType(List.class, Song.class));
+                for (Album album : albums) {
 
-                        items.add(new Album(album.getAlbumID(),album.getAlbumName(),interpreter,new ArrayList<>(songs)));
+                    path = "Song/byAlbumID";
+                    query = "albumID";
+                    connection = getConnection(path, query, String.valueOf(album.getAlbumID()));
+                    json = connection.getInputStream();
+                    mapper = new ObjectMapper();
+                    List<Song> songs = mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, Song.class));
 
-                    }
-
+                    items.add(new Album(album.getAlbumID(), album.getAlbumName(), interpreter, new ArrayList<>(songs)));
 
                 }
 
+
             }
+
 
             addItemToResultList(items);
             System.out.println("Mapped.");
 
 
-        }catch (JsonMappingException ex) {
-            ex.printStackTrace(); }
-        catch (IOException ex) {ex.printStackTrace();}
-        catch (Exception ex) {
-            ex.printStackTrace();}
-        catch (Throwable ex) {
-            ex.printStackTrace();}
+        } catch (JsonMappingException ex) {
+            ex.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } catch (Throwable ex) {
+            ex.printStackTrace();
+        }
 
 
-
-        System.out.println(searchText.getText()+" ");
+        System.out.println(searchText.getText() + " ");
 
     }
 
-    private HttpURLConnection getConnection(String path, String query, String searchText) throws Exception{
+    private HttpURLConnection getConnection(String path, String query, String searchText) throws Exception {
 
         System.out.println("Connecting...");
         String uri =
-                "http://localhost:18181/"+path+"?"+query+"="+searchText;
+                "http://localhost:18181/" + path + "?" + query + "=" + searchText;
         URL url = new URL(uri);
         HttpURLConnection connection =
                 (HttpURLConnection) url.openConnection();
@@ -162,7 +185,6 @@ public class GuiController implements Initializable{
         return connection;
 
     }
-
 
 
 }
