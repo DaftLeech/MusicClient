@@ -94,10 +94,6 @@ public class GuiController implements Initializable{
 
             ObservableList<Album> items = FXCollections.observableArrayList();
 
-
-
-
-
             if(searchByInter){
                 System.out.println("Mapping...");
                 InputStream json = connection.getInputStream();
