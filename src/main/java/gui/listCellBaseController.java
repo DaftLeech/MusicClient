@@ -11,6 +11,7 @@ import javafx.scene.layout.AnchorPane;
 import model.Album;
 import model.Song;
 
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -26,19 +27,29 @@ public class listCellBaseController extends ListCell<Album> {
     @FXML
     private FXMLLoader mLLoader;
 
+
+    private GuiController parent;
+
+    public listCellBaseController(GuiController parent){
+        this.parent = parent;
+    }
+
     @Override
     protected void updateItem(Album album, boolean empty) {
         super.updateItem(album, empty);
 
+        if( detailsList!=null)
+        detailsList.refresh();
         if(empty || album == null) {
 
             setText(null);
-            setGraphic(null);
+            setGraphic(pane);
 
         } else {
-            if (mLLoader == null) {
+            if (mLLoader == null || detailsList==null) {
                 mLLoader = new FXMLLoader(getClass().getResource("/listCellBase.fxml"));
                 mLLoader.setController(this);
+
 
                 try {
                     mLLoader.load();
@@ -48,16 +59,27 @@ public class listCellBaseController extends ListCell<Album> {
 
             }
 
-            headTitle.setText(String.valueOf(album.getAlbumName()));
-            ArrayList<Label> labels = new ArrayList<>();
-            for(Song song : album.getSongs()){
-                labels.add(new Label(album.getInterpreter().getInterName()+" - "+song.getSongName()+"("+String.valueOf(song.getSongLength())+")"));
-            }
-            ObservableList<Label> items = FXCollections.observableArrayList(labels);
 
-            System.out.println(items.size()*detailsList.getFixedCellSize());
+            headTitle.setText(String.valueOf(album.getAlbumName()));
+            ObservableList<Label> labels = FXCollections.observableArrayList();
+            for(Song song : album.getSongs()){
+                Label label = new Label(album.getInterpreter().getInterName()+" - "+song.getSongName()+"("+String.valueOf(song.getSongLength())+")");
+                label.setOnMouseClicked(e -> {
+                            System.out.println(song.getSongID());
+                            parent.handleWishListItem(song.getSongID());
+                        });
+                labels.add(label);
+            }
+
+            ObservableList<Label> items = FXCollections.observableArrayList();
+            items.addAll(labels);
+
+            detailsList.getItems().clear();
+            detailsList.getItems().addAll(items);
+            System.out.print("DetailsList:");
+            System.out.println(detailsList.getItems().size());
+
             detailsList.setFixedCellSize(35);
-            detailsList.setItems(items);
             double lastHeight = detailsList.getPrefHeight();
             detailsList.setPrefHeight((detailsList.getItems().size())*detailsList.getFixedCellSize()+detailsList.getFixedCellSize()/10);
             double newHeight = detailsList.getPrefHeight();
@@ -69,4 +91,6 @@ public class listCellBaseController extends ListCell<Album> {
         }
 
     }
+
+
 }

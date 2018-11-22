@@ -7,12 +7,14 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import login.LoginController;
+import model.User;
 
 import java.awt.*;
 
 public class Main extends Application {
 
     private static Stage stage;
+    public static User user;
 
     @Override
     public void start(Stage primaryStage) throws Exception{

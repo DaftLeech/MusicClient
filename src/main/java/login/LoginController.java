@@ -97,8 +97,13 @@ public class LoginController implements Initializable
             System.out.print("SessionID:");
             System.out.println(user.getSessionID());
 
-            if(user!=null)//||userField.getText().equals("admin") && passwordField.getText().equals("admin"))
-                stage.postLogin(userField.getText());
+            if(user!=null){
+                //||userField.getText().equals("admin") && passwordField.getText().equals("admin"))
+                user.setUserName(userField.getText());
+                Main.user =user;
+                stage.postLogin(Main.user.getUserName());
+            }
+
         }catch (Exception e){
             e.printStackTrace();
         }

@@ -49,4 +49,12 @@ public class Album {
     public long getInterID() {
         return interID;
     }
+
+    public void setInterpreter(Interpreter interpreter) {
+        this.interpreter = interpreter;
+    }
+
+    public void setSongs(ArrayList<Song> songs) {
+        this.songs = songs;
+    }
 }
