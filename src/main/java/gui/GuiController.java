@@ -34,7 +34,7 @@ public class GuiController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        System.out.println("INIT");
+
         ObservableList<String> sTypeNames = FXCollections.observableArrayList(searchTypes.INTERPRETER.name(), searchTypes.ALBUM.name());
         searchCombo.setItems(sTypeNames);
         searchCombo.getSelectionModel().select(0);
@@ -59,11 +59,9 @@ public class GuiController implements Initializable {
 
     public void addItemToResultList(ObservableList<Album> items) {
 
-        System.out.println(resultList.getItems().size());
         clearResultList();
         resultList.getItems().addAll(items);
         resultList.refresh();
-        System.out.println(resultList.getItems().size());
 
 
     }
@@ -71,12 +69,8 @@ public class GuiController implements Initializable {
     public void addItemToWishList(ObservableList<Album> items) {
 
         clearWishList();
-        System.out.print("WishList");
-        System.out.println(wishList.getItems().size());
         wishList.getItems().addAll(items);
         wishList.refresh();
-        System.out.print("WishList");
-        System.out.println(wishList.getItems().size());
 
     }
 
@@ -111,6 +105,8 @@ public class GuiController implements Initializable {
 
         clearWishList();
         try {
+
+            System.out.println("Connecting...");
             String path = "Wishlist/IDs";
             String query = "userID";
 
@@ -130,7 +126,7 @@ public class GuiController implements Initializable {
             String songIDs = new BufferedReader(new InputStreamReader(text))
                     .lines().collect(Collectors.joining("\n"));
 
-            System.out.println(songIDs);
+
 
             if(songIDs.equals(""))
                 return;
@@ -180,12 +176,10 @@ public class GuiController implements Initializable {
     }
 
     public void clearResultList() {
-        System.out.println(resultList.getItems().size());
         resultList.getItems().clear();
         resultList.getItems().removeAll();
         resultList.setCellFactory(ListView -> new listCellBaseController(this));
         resultList.refresh();
-        System.out.println(resultList.getItems().size());
     }
 
     public void clearWishList() {
@@ -304,7 +298,6 @@ public class GuiController implements Initializable {
         }
 
 
-        System.out.println(searchText.getText() + " ");
 
     }
 

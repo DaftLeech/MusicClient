@@ -65,7 +65,7 @@ public class listCellBaseController extends ListCell<Album> {
             for(Song song : album.getSongs()){
                 Label label = new Label(album.getInterpreter().getInterName()+" - "+song.getSongName()+"("+String.valueOf(song.getSongLength())+")");
                 label.setOnMouseClicked(e -> {
-                            System.out.println(song.getSongID());
+
                             parent.handleWishListItem(song.getSongID());
                         });
                 labels.add(label);
@@ -76,8 +76,6 @@ public class listCellBaseController extends ListCell<Album> {
 
             detailsList.getItems().clear();
             detailsList.getItems().addAll(items);
-            System.out.print("DetailsList:");
-            System.out.println(detailsList.getItems().size());
 
             detailsList.setFixedCellSize(35);
             double lastHeight = detailsList.getPrefHeight();
