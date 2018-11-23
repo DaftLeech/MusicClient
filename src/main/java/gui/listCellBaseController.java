@@ -11,11 +11,9 @@ import javafx.scene.layout.AnchorPane;
 import model.Album;
 import model.Song;
 
-import java.awt.event.MouseEvent;
 import java.io.IOException;
-import java.util.ArrayList;
 
-public class listCellBaseController extends ListCell<Album> {
+class listCellBaseController extends ListCell<Album> {
 
     @FXML
     private Label headTitle;
@@ -28,7 +26,7 @@ public class listCellBaseController extends ListCell<Album> {
     private FXMLLoader mLLoader;
 
 
-    private GuiController parent;
+    private final GuiController parent;
 
     public listCellBaseController(GuiController parent){
         this.parent = parent;
@@ -64,10 +62,7 @@ public class listCellBaseController extends ListCell<Album> {
             ObservableList<Label> labels = FXCollections.observableArrayList();
             for(Song song : album.getSongs()){
                 Label label = new Label(album.getInterpreter().getInterName()+" - "+song.getSongName()+"("+String.valueOf(song.getSongLength())+")");
-                label.setOnMouseClicked(e -> {
-
-                            parent.handleWishListItem(song.getSongID());
-                        });
+                label.setOnMouseClicked(e -> parent.handleWishListItem(song.getSongID()));
                 labels.add(label);
             }
 

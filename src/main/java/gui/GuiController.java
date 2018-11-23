@@ -1,6 +1,5 @@
 package gui;
 
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jfoenix.controls.*;
 import javafx.collections.FXCollections;
@@ -12,25 +11,21 @@ import model.Album;
 import model.Interpreter;
 import model.Song;
 import general.Main;
-import sun.misc.IOUtils;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
+
+
+
 public class GuiController implements Initializable {
 
-    private Main stage;
-
     private enum searchTypes {INTERPRETER, ALBUM}
-
-    ;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -39,17 +34,7 @@ public class GuiController implements Initializable {
         searchCombo.setItems(sTypeNames);
         searchCombo.getSelectionModel().select(0);
 
-        /*
-        Interpreter i = new Interpreter("Inter");
-        Song s = new Song(-1,"Song",100,-1);
-        ArrayList<Song> aS = new ArrayList<>();
-        for(int ix = 0; ix < 100; ix++)
-            aS.add(s);
-        Album a = new Album(-1,"Album",i,aS);
 
-        ObservableList<Album> items = FXCollections.observableArrayList(a);
-        addItemToResultList(items);
-        */
         clearResultList();
         loadWishList();
         resultList.setCellFactory(ListView -> new listCellBaseController(this));
@@ -57,7 +42,7 @@ public class GuiController implements Initializable {
 
     }
 
-    public void addItemToResultList(ObservableList<Album> items) {
+    private void addItemToResultList(ObservableList<Album> items) {
 
         clearResultList();
         resultList.getItems().addAll(items);
@@ -66,7 +51,7 @@ public class GuiController implements Initializable {
 
     }
 
-    public void addItemToWishList(ObservableList<Album> items) {
+    private void addItemToWishList(ObservableList<Album> items) {
 
         clearWishList();
         wishList.getItems().addAll(items);
@@ -87,8 +72,6 @@ public class GuiController implements Initializable {
             HttpURLConnection connection =
                     (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("PUT");
-            //connection.setRequestProperty("Content-Type", "text/plain");
-            //connection.setRequestProperty("Accept", "text/plain");
             connection.connect();
             System.out.println(connection.getResponseCode());
             System.out.println(uri);
@@ -101,7 +84,7 @@ public class GuiController implements Initializable {
 
     }
 
-    public void loadWishList() {
+    private void loadWishList() {
 
         clearWishList();
         try {
@@ -121,7 +104,7 @@ public class GuiController implements Initializable {
             System.out.println(uri);
             System.out.println("Connected.");
             ObservableList<Album> items = FXCollections.observableArrayList();
-            ObjectMapper mapper = new ObjectMapper();
+            ObjectMapper mapper;
             InputStream text = connection.getInputStream();
             String songIDs = new BufferedReader(new InputStreamReader(text))
                     .lines().collect(Collectors.joining("\n"));
@@ -175,14 +158,14 @@ public class GuiController implements Initializable {
 
     }
 
-    public void clearResultList() {
+    private void clearResultList() {
         resultList.getItems().clear();
         resultList.getItems().removeAll();
         resultList.setCellFactory(ListView -> new listCellBaseController(this));
         resultList.refresh();
     }
 
-    public void clearWishList() {
+    private void clearWishList() {
 
 
         wishList.getItems().clear();
@@ -190,10 +173,6 @@ public class GuiController implements Initializable {
         wishList.setCellFactory(ListView -> new listCellBaseController(this));
         wishList.refresh();
 
-    }
-
-    public void setStage(Main stage) {
-        this.stage = stage;
     }
 
     @FXML
@@ -230,9 +209,9 @@ public class GuiController implements Initializable {
             HttpURLConnection connection = getConnection(path, query, searchText.getText());
 
             ObservableList<Album> items = FXCollections.observableArrayList();
-            ObjectMapper mapper = new ObjectMapper();
-            List<Interpreter> interpreters = new LinkedList();
-            InputStream json = null;
+            ObjectMapper mapper;
+            List<Interpreter> interpreters = new LinkedList<>();
+            InputStream json;
 
 
             System.out.println("Mapping...");
@@ -287,12 +266,6 @@ public class GuiController implements Initializable {
             System.out.println("Mapped.");
 
 
-        } catch (JsonMappingException ex) {
-            ex.printStackTrace();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } catch (Exception ex) {
-            ex.printStackTrace();
         } catch (Throwable ex) {
             ex.printStackTrace();
         }
@@ -321,3 +294,6 @@ public class GuiController implements Initializable {
 
 
 }
+
+
+
